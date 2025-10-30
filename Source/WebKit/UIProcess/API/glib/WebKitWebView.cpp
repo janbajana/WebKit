@@ -864,6 +864,7 @@ static void webkitWebViewCreatePage(WebKitWebView* webView, Ref<API::PageConfigu
 #if PLATFORM(GTK)
     webkitWebViewBaseCreateWebPage(WEBKIT_WEB_VIEW_BASE(webView), WTFMove(configuration));
 #elif PLATFORM(WPE)
+// TODO (jbajana): hare is the magic.
 #if ENABLE(WPE_PLATFORM)
     if (!webView->priv->backend) {
         webView->priv->view = WKWPE::ViewPlatform::create(webkit_web_view_get_display(webView), configuration.get());
@@ -882,11 +883,14 @@ static void webkitWebViewConstructed(GObject* object)
 
     WebKitWebView* webView = WEBKIT_WEB_VIEW(object);
     WebKitWebViewPrivate* priv = webView->priv;
+    g_message(">>> WPE: webkitWebViewConstructed 0 %p", priv->display.get());
+
     if (priv->relatedView) {
 #if PLATFORM(WPE) && ENABLE(WPE_PLATFORM)
         if (priv->display)
             g_critical("WebKitWebView display property can't be set when related-view is set too, passed display value is ignored.");
         priv->display = webkit_web_view_get_display(priv->relatedView);
+        g_message(">>> WPE: webkitWebViewConstructed 1 %p", priv->display.get());
 #endif
         if (priv->context)
             g_critical("WebKitWebView web-context property can't be set when related-view is set too, passed web-context value is ignored.");
@@ -911,8 +915,10 @@ static void webkitWebViewConstructed(GObject* object)
 #endif
 
 #if PLATFORM(WPE) && ENABLE(WPE_PLATFORM)
-    if (!priv->display && !priv->backend)
+    if (!priv->display && !priv->backend){
         priv->display = wpe_display_get_default();
+        g_message(">>> WPE: webkitWebViewConstructed 2 %p", priv->display.get());
+    }
     else if (priv->backend) {
         if (priv->display) {
             g_critical("WebKitWebView backend can't be set when display is set too, passed backend is ignored.");
@@ -923,6 +929,8 @@ static void webkitWebViewConstructed(GObject* object)
             priv->display = wpe_display_get_default();
         }
     }
+
+    g_message(">>> WPE: webkitWebViewConstructed 3 %p", priv->display.get());
 
     if (priv->display)
         SystemSettingsManagerProxy::initialize();

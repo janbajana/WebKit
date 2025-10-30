@@ -207,6 +207,8 @@ static void wpeScreenTryEnsureSyncObserver(WPEScreen* screen)
     if (devicesNum <= 0)
         return;
 
+    g_message(">>> WPE: wpeScreenTryEnsureSyncObserver");
+
     for (int i = 0; i < devicesNum; i++) {
         if (!(devices[i]->available_nodes & (1 << DRM_NODE_PRIMARY)))
             continue;
@@ -232,6 +234,7 @@ static void wpeScreenTryEnsureSyncObserver(WPEScreen* screen)
 static WPEScreenSyncObserver* wpeScreenGetSyncObserver(WPEScreen* screen)
 {
     auto* priv = screen->priv;
+    g_message(">>> WPE: Getting WPEScreenSyncObserver for WPEScreen %u", priv->id);
     if (!priv->syncObserver)
         wpeScreenTryEnsureSyncObserver(screen);
     return priv->syncObserver.get();

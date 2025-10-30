@@ -241,6 +241,7 @@ WPEInputMethodContext* wpeDisplayCreateInputMethodContext(WPEDisplay* display, W
  */
 WPEDisplay* wpe_display_get_default(void)
 {
+    g_message(">>> WPE: wpe_display_get_default called");
     static GRefPtr<WPEDisplay> s_defaultDisplay;
     static std::once_flag onceFlag;
     std::call_once(onceFlag, [] {

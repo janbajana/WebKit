@@ -48,6 +48,7 @@
 #include <wtf/glib/GUniquePtr.h>
 #include <wtf/glib/GWeakPtr.h>
 #include <wtf/glib/WTFGType.h>
+#include <wtf/Assertions.h>
 
 // These includes need to be in this order because wayland-egl.h defines WL_EGL_PLATFORM
 // and egl.h checks that to decide whether it's Wayland platform.
@@ -373,6 +374,7 @@ static struct wl_buffer* createWaylandBufferSHM(WPEView* view, WPEBuffer* buffer
 static struct wl_buffer* createWaylandBuffer(WPEView* view, WPEBuffer* buffer, GError** error)
 {
     struct wl_buffer* wlBuffer = nullptr;
+    g_message(">>> WPE: createWaylandBuffer: is dma: %d", WPE_IS_BUFFER_DMA_BUF(buffer));
     if (WPE_IS_BUFFER_DMA_BUF(buffer))
         wlBuffer = createWaylandBufferFromDMABuf(view, buffer, error);
     else if (WPE_IS_BUFFER_SHM(buffer))
@@ -552,6 +554,8 @@ static gboolean wpeViewWaylandRenderBuffer(WPEView* view, WPEBuffer* buffer, con
     if (!wlBuffer)
         return FALSE;
 
+    // g_message(">>> wpeViewWaylandRenderBuffer");
+        
     auto* toplevel = wpe_view_get_toplevel(view);
     if (wpe_toplevel_get_state(toplevel) & WPE_TOPLEVEL_STATE_MAXIMIZED) {
         // The surface is maximized. The window geometry specified in the configure
@@ -716,6 +720,8 @@ static gboolean wpeViewWaylandCanBeMapped(WPEView* view)
 
 static void wpe_view_wayland_class_init(WPEViewWaylandClass* viewWaylandClass)
 {
+    g_message(">>> WPE: wpe_view_wayland_class_init");
+
     GObjectClass* objectClass = G_OBJECT_CLASS(viewWaylandClass);
     objectClass->constructed = wpeViewWaylandConstructed;
     objectClass->dispose = wpeViewWaylandDispose;
@@ -728,6 +734,8 @@ static void wpe_view_wayland_class_init(WPEViewWaylandClass* viewWaylandClass)
     viewClass->set_cursor_from_bytes = wpeViewWaylandSetCursorFromBytes;
     viewClass->set_opaque_rectangles = wpeViewWaylandSetOpaqueRectangles;
     viewClass->can_be_mapped = wpeViewWaylandCanBeMapped;
+
+    WTFReportBacktrace();
 }
 
 /**
