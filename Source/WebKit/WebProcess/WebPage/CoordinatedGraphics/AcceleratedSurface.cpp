@@ -171,6 +171,7 @@ AcceleratedSurface::RenderTargetShareableBuffer::~RenderTargetShareableBuffer()
 
 void AcceleratedSurface::RenderTargetShareableBuffer::didRenderFrame(Vector<IntRect, 1>&& damageRects)
 {
+    // TODO (jbajana): send message that frame was rendered with damage rects.
     WebProcess::singleton().parentProcessConnection()->send(Messages::AcceleratedBackingStore::Frame(m_id, WTFMove(damageRects), WTFMove(m_renderingFenceFD)), m_surfaceID);
 }
 
@@ -218,6 +219,10 @@ std::unique_ptr<AcceleratedSurface::RenderTarget> AcceleratedSurface::RenderTarg
         WTFLogAlways("Failed to create GBM buffer of size %dx%d: no valid format found", size.width(), size.height());
         return nullptr;
     }
+
+    g_message(">>>>>>>> WPE 1: %s", G_STRFUNC);
+    WTFReportBacktrace();
+
 
     auto gbmDevice = bufferFormat.gbmDevice;
     if (!gbmDevice) {
@@ -852,6 +857,7 @@ void AcceleratedSurface::willRenderFrame(const IntSize& size)
 void AcceleratedSurface::didRenderFrame()
 {
 #if PLATFORM(GTK) || PLATFORM(WPE)
+    // TODO (jbajana): analyze how WebKit tracing works
     TraceScope traceScope(WaitForCompositionCompletionStart, WaitForCompositionCompletionEnd);
 #endif
 

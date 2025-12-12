@@ -47,6 +47,10 @@ std::unique_ptr<DisplayVBlankMonitor> DisplayVBlankMonitorWPE::create(PlatformDi
         return nullptr;
     }
 
+    g_message(">>>>>> \t WPEScreen DisplayVBlankMonitorWPE display: %u==%u, fps: %u, size: %ux%u", 
+        displayID, wpe_screen_get_id(screen), wpe_screen_get_refresh_rate(screen), wpe_screen_get_width(screen), wpe_screen_get_height(screen));
+
+
     return makeUnique<DisplayVBlankMonitorWPE>(wpe_screen_get_refresh_rate(screen) / 1000, WTFMove(observer));
 }
 
@@ -54,7 +58,10 @@ DisplayVBlankMonitorWPE::DisplayVBlankMonitorWPE(unsigned refreshRate, GRefPtr<W
     : DisplayVBlankMonitor(refreshRate)
     , m_observer(WTFMove(observer))
 {
+    g_message(">>>>>> WPEScreen DisplayVBlankMonitorWPE:DisplayVBlankMonitorWPE() refreshRate: %u", m_refreshRate);
+
     wpe_screen_sync_observer_set_callback(m_observer.get(), +[](WPEScreenSyncObserver* observer, gpointer userData) {
+        // g_message(">>>>>> WPEScreen DisplayVBlankMonitorWPE: VBlank occurred");
         auto* monitor = static_cast<DisplayVBlankMonitorWPE*>(userData);
         monitor->m_handler();
     }, this, nullptr);

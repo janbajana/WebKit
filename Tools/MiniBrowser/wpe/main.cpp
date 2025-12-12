@@ -569,6 +569,7 @@ static void activate(GApplication* application, WPEToolingBackends::ViewBackend*
 
 #if ENABLE_WPE_PLATFORM_HEADLESS
     WPEDisplay* wpeDisplay = headlessMode && !useLegacyAPI ? wpe_display_headless_new() : nullptr;
+    g_message(">>> start application %d, display: %p, backend %p, viewbackend %p", headlessMode, wpeDisplay, backend, viewBackend);
 #endif
 
     webkit_web_context_set_automation_allowed(webContext, automationMode);
@@ -608,6 +609,7 @@ static void activate(GApplication* application, WPEToolingBackends::ViewBackend*
 
 #if ENABLE_WPE_PLATFORM
     if (auto* wpeView = webkit_web_view_get_wpe_view(webView)) {
+        g_message(">>> Configuring WPEView with width=%u height=%u", windowWidth, windowHeight);
         auto* wpeToplevel = wpe_view_get_toplevel(wpeView);
         if (windowWidth > 0 && windowHeight > 0)
             wpe_toplevel_resize(wpeToplevel, windowWidth, windowHeight);
@@ -631,11 +633,13 @@ static void activate(GApplication* application, WPEToolingBackends::ViewBackend*
     g_signal_connect(webView, "close", G_CALLBACK(webViewClose), application);
     g_hash_table_add(openViews, webView);
 
+    g_message(">>> WPE loading uri...");
+
     WebKitColor color;
     if (bgColor && webkit_color_parse(&color, bgColor))
         webkit_web_view_set_background_color(webView, &color);
 
-    if (uriArguments) {
+        if (uriArguments) {
         const char* uri = uriArguments[0];
         if (g_str_equal(uri, "about:gpu"))
             uri = "webkit://gpu";

@@ -142,6 +142,8 @@ void WebProcess::initializePlatformDisplayIfNeeded() const
     if (PlatformDisplay::sharedDisplayIfExists())
         return;
 
+    g_message(">>>>> WPE: initializePlatformDisplayIfNeeded 1");
+
 #if USE(GBM)
     if (m_rendererBufferTransportMode.contains(RendererBufferTransportMode::Hardware)) {
         bool disabled = false;
@@ -151,6 +153,8 @@ void WebProcess::initializePlatformDisplayIfNeeded() const
         disabled = disableGBM && strcmp(disableGBM, "0");
         IGNORE_CLANG_WARNINGS_END
 #endif
+        g_message(">>>>> WPE: initializePlatformDisplayIfNeeded 2: %d", disabled);
+
         if (!disabled) {
             if (auto device = DRMDeviceManager::singleton().mainGBMDevice(DRMDeviceManager::NodeType::Render)) {
                 PlatformDisplay::setSharedDisplay(PlatformDisplayGBM::create(device->device()));
@@ -160,6 +164,7 @@ void WebProcess::initializePlatformDisplayIfNeeded() const
     }
 #endif
 
+    g_message(">>>>> WPE: initializePlatformDisplayIfNeeded 4");
     if (auto display = PlatformDisplaySurfaceless::create()) {
         PlatformDisplay::setSharedDisplay(WTFMove(display));
         return;

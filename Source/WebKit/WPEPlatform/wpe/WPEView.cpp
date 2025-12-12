@@ -882,7 +882,7 @@ WPEToplevelState wpe_view_get_toplevel_state(WPEView* view)
 WPEScreen* wpe_view_get_screen(WPEView* view)
 {
     g_return_val_if_fail(WPE_IS_VIEW(view), nullptr);
-
+    g_message(">>>>>> WPEScreen wpe_view_get_screen");
     return view->priv->toplevel ? wpe_toplevel_get_screen(view->priv->toplevel.get()) : nullptr;
 }
 
@@ -1062,6 +1062,7 @@ gboolean wpe_view_get_has_focus(WPEView* view)
 WPEBufferDMABufFormats* wpe_view_get_preferred_dma_buf_formats(WPEView* view)
 {
     g_return_val_if_fail(WPE_IS_VIEW(view), nullptr);
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
 
     if (!view->priv->toplevel)
         return nullptr;

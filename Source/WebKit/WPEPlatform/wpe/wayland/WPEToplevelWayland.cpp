@@ -706,6 +706,9 @@ static WPEBufferDMABufFormats* wpeToplevelWaylandGetPreferredDMABufFormats(WPETo
     if (!priv->committedDMABufFeedback)
         return nullptr;
 
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+
+        
     auto mainDevice = wpeToplevelWaylandGetDRMDevice(toplevel, priv->committedDMABufFeedback->device());
     auto* builder = wpe_buffer_dma_buf_formats_builder_new(mainDevice.get());
     for (const auto& tranche : priv->committedDMABufFeedback->tranches) {

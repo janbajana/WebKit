@@ -48,6 +48,7 @@
 #include <wtf/glib/GUniquePtr.h>
 #include <wtf/glib/GWeakPtr.h>
 #include <wtf/glib/WTFGType.h>
+#include <wtf/Assertions.h>
 
 // These includes need to be in this order because wayland-egl.h defines WL_EGL_PLATFORM
 // and egl.h checks that to decide whether it's Wayland platform.
@@ -293,6 +294,29 @@ static struct wl_buffer* createWaylandBufferFromDMABuf(WPEView* view, WPEBuffer*
     if (auto* dmaBufBuffer = static_cast<DMABufBuffer*>(wpe_buffer_get_user_data(buffer)))
         return dmaBufBuffer->wlBuffer();
 
+    if (WPE_IS_BUFFER_DMA_BUF(buffer))
+    {
+      WPEBufferDMABuf *bufferDMABuf = WPE_BUFFER_DMA_BUF(buffer);
+      const int bufferWidth = wpe_buffer_get_width(buffer);
+      const int bufferHeight = wpe_buffer_get_height(buffer);
+      const int nPlanes = (size_t)wpe_buffer_dma_buf_get_n_planes(bufferDMABuf);
+
+      g_message("<<<<<<<< >>>>>>> wpe_drawing_area_ensure_texture buffer=%p, size=%dx%d, "
+                "planes=%d",
+                buffer, bufferWidth, bufferHeight, nPlanes);
+
+      for (int iPlane = 0; iPlane < nPlanes; iPlane++)
+      {
+        const int fd = wpe_buffer_dma_buf_get_fd(bufferDMABuf, iPlane);
+        const int offsets = wpe_buffer_dma_buf_get_offset(bufferDMABuf, iPlane);
+        const int strides = wpe_buffer_dma_buf_get_stride(bufferDMABuf, iPlane);
+        g_message(">>> \t wpe_drawing_area_ensure_texture: plane %d, fd=%d, "
+                  "offset=%d, stride=%d",
+                  iPlane, fd, offsets, strides);
+      }
+    }
+
+
     auto* bufferDMABuf = WPE_BUFFER_DMA_BUF(buffer);
     DMABufBuffer* dmaBufBuffer = nullptr;
     if (auto* dmabuf = wpeDisplayWaylandGetLinuxDMABuf(WPE_DISPLAY_WAYLAND(wpe_view_get_display(view)))) {
@@ -373,6 +397,7 @@ static struct wl_buffer* createWaylandBufferSHM(WPEView* view, WPEBuffer* buffer
 static struct wl_buffer* createWaylandBuffer(WPEView* view, WPEBuffer* buffer, GError** error)
 {
     struct wl_buffer* wlBuffer = nullptr;
+    // g_message(">>> WPE: createWaylandBuffer: is dma: %d", WPE_IS_BUFFER_DMA_BUF(buffer));
     if (WPE_IS_BUFFER_DMA_BUF(buffer))
         wlBuffer = createWaylandBufferFromDMABuf(view, buffer, error);
     else if (WPE_IS_BUFFER_SHM(buffer))
@@ -552,6 +577,8 @@ static gboolean wpeViewWaylandRenderBuffer(WPEView* view, WPEBuffer* buffer, con
     if (!wlBuffer)
         return FALSE;
 
+    // g_message(">>> wpeViewWaylandRenderBuffer");
+        
     auto* toplevel = wpe_view_get_toplevel(view);
     if (wpe_toplevel_get_state(toplevel) & WPE_TOPLEVEL_STATE_MAXIMIZED) {
         // The surface is maximized. The window geometry specified in the configure
@@ -572,8 +599,12 @@ static gboolean wpeViewWaylandRenderBuffer(WPEView* view, WPEBuffer* buffer, con
     auto* wlSurface = wpe_view_wayland_get_wl_surface(WPE_VIEW_WAYLAND(view));
     wl_surface_attach(wlSurface, wlBuffer, 0, 0);
 
+    // g_message("wpeViewWaylandRenderBuffer v1: buffer=%p", buffer);
+
     auto renderingFence = UnixFileDescriptor { wpe_buffer_take_rendering_fence(buffer), UnixFileDescriptor::Adopt };
     if (renderingFence) {
+        // g_message("wpeViewWaylandRenderBuffer renderingFence: buffer=%p", buffer);
+
         auto* surfaceSync = wpeToplevelWaylandGetSurfaceSync(WPE_TOPLEVEL_WAYLAND(wpe_view_get_toplevel(view)));
         zwp_linux_surface_synchronization_v1_set_acquire_fence(surfaceSync, renderingFence.value());
 
@@ -709,6 +740,7 @@ static void wpeViewWaylandSetOpaqueRectangles(WPEView* view, WPERectangle* rects
 
 static gboolean wpeViewWaylandCanBeMapped(WPEView* view)
 {
+    g_message(">>>>>> WPEScreen wpeViewWaylandCanBeMapped");
     if (auto* toplevel = wpe_view_get_toplevel(view))
         return !!wpe_toplevel_get_screen(toplevel);
     return FALSE;
@@ -716,6 +748,8 @@ static gboolean wpeViewWaylandCanBeMapped(WPEView* view)
 
 static void wpe_view_wayland_class_init(WPEViewWaylandClass* viewWaylandClass)
 {
+    g_message(">>> WPE: wpe_view_wayland_class_init");
+
     GObjectClass* objectClass = G_OBJECT_CLASS(viewWaylandClass);
     objectClass->constructed = wpeViewWaylandConstructed;
     objectClass->dispose = wpeViewWaylandDispose;
@@ -728,6 +762,8 @@ static void wpe_view_wayland_class_init(WPEViewWaylandClass* viewWaylandClass)
     viewClass->set_cursor_from_bytes = wpeViewWaylandSetCursorFromBytes;
     viewClass->set_opaque_rectangles = wpeViewWaylandSetOpaqueRectangles;
     viewClass->can_be_mapped = wpeViewWaylandCanBeMapped;
+
+    // WTFReportBacktrace();
 }
 
 /**

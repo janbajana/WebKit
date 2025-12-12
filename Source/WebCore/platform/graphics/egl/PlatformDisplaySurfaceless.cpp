@@ -33,9 +33,13 @@ namespace WebCore {
 
 std::unique_ptr<PlatformDisplaySurfaceless> PlatformDisplaySurfaceless::create()
 {
+    g_message(">>> WPE: PlatformDisplaySurfaceless");
+
     const char* extensions = eglQueryString(nullptr, EGL_EXTENSIONS);
     if (!GLContext::isExtensionSupported(extensions, "EGL_MESA_platform_surfaceless"))
         return nullptr;
+
+    g_message(">>> WPE: PlatformDisplaySurfaceless 2");
 
     RefPtr<GLDisplay> glDisplay;
     if (GLContext::isExtensionSupported(extensions, "EGL_EXT_platform_base"))

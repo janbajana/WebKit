@@ -30,6 +30,7 @@
 #include "Logging.h"
 #include <wtf/TZoneMallocInlines.h>
 #include <wtf/Vector.h>
+#include <wtf/Assertions.h>
 
 #if USE(LIBDRM)
 #include "DisplayVBlankMonitorDRM.h"
@@ -47,9 +48,13 @@ WTF_MAKE_TZONE_ALLOCATED_IMPL(DisplayVBlankMonitor);
 IGNORE_CLANG_WARNINGS_BEGIN("unsafe-buffer-usage-in-libc-call")
 std::unique_ptr<DisplayVBlankMonitor> DisplayVBlankMonitor::create(PlatformDisplayID displayID)
 {
+    g_message("<<<<<<< >>>>>> WPEScreen DisplayVBlankMonitor::create() 0, displayID: %u", displayID);
+
     static const char* forceTimer = getenv("WEBKIT_FORCE_VBLANK_TIMER");
     if (!displayID || (forceTimer && strcmp(forceTimer, "0")))
         return DisplayVBlankMonitorTimer::create();
+
+    g_message(">>>>>> WPEScreen DisplayVBlankMonitor::create() 1");
 
 #if ENABLE(WPE_PLATFORM)
     if (WKWPE::isUsingWPEPlatformAPI()) {
@@ -61,11 +66,15 @@ std::unique_ptr<DisplayVBlankMonitor> DisplayVBlankMonitor::create(PlatformDispl
     }
 #endif
 
+    g_message(">>>>>> WPEScreen DisplayVBlankMonitor::create() 2");
+
 #if USE(LIBDRM)
     if (auto monitor = DisplayVBlankMonitorDRM::create(displayID))
         return monitor;
     RELEASE_LOG_FAULT(DisplayLink, "Failed to create DRM vblank monitor, falling back to timer");
 #endif
+
+    g_message(">>>>>> WPEScreen DisplayVBlankMonitor::create() 3");
 
     return DisplayVBlankMonitorTimer::create();
 }
@@ -74,6 +83,8 @@ IGNORE_CLANG_WARNINGS_END
 DisplayVBlankMonitor::DisplayVBlankMonitor(unsigned refreshRate)
     : m_refreshRate(refreshRate)
 {
+    g_message(">>>>>> WPEScreen DisplayVBlankMonitor::DisplayVBlankMonitor()");
+    //  WTFReportBacktrace();
 }
 
 DisplayVBlankMonitor::~DisplayVBlankMonitor() = default;

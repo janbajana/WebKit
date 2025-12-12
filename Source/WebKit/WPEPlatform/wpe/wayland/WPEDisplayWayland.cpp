@@ -56,6 +56,7 @@
 #include <wtf/glib/WTFGType.h>
 #include <wtf/text/CString.h>
 #include <wtf/text/StringView.h>
+#include <wtf/Assertions.h>
 
 // These includes need to be in this order because wayland-egl.h defines WL_EGL_PLATFORM
 // and egl.h checks that to decide whether it's Wayland platform.
@@ -481,6 +482,7 @@ static gboolean wpeDisplayWaylandConnect(WPEDisplay* display, GError** error)
 static WPEView* wpeDisplayWaylandCreateView(WPEDisplay* display)
 {
     auto* view = WPE_VIEW(g_object_new(WPE_TYPE_VIEW_WAYLAND, "display", display, nullptr));
+    g_message(">>>>>>> WPE: %s", G_STRFUNC);
 
     if (wpe_settings_get_boolean(wpe_display_get_settings(display), WPE_SETTING_CREATE_VIEWS_WITH_A_TOPLEVEL, nullptr)) {
         GRefPtr<WPEToplevel> toplevel = adoptGRef(wpe_toplevel_wayland_new(WPE_DISPLAY_WAYLAND(display), 1));
@@ -506,14 +508,20 @@ static WPEInputMethodContext* wpeDisplayWaylandCreateInputMethodContext(WPEDispl
 
 static gpointer wpeDisplayWaylandGetEGLDisplay(WPEDisplay* display, GError** error)
 {
+    g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // WTFReportBacktrace();
+
     auto* priv = WPE_DISPLAY_WAYLAND(display)->priv;
     if (!priv->wlDisplay) {
         g_set_error_literal(error, WPE_EGL_ERROR, WPE_EGL_ERROR_NOT_AVAILABLE, "Can't get EGL display: Wayland display is not connected");
         return nullptr;
     }
 
-    if (auto* eglDisplay = eglGetDisplay(priv->wlDisplay))
+    if (auto* eglDisplay = eglGetDisplay(priv->wlDisplay)){
+        // g_message(">>>>>>> WPE: %s: eglDisplay=%p (hex: 0x%lx)", G_STRFUNC, 
+        //     eglDisplay, (unsigned long)eglDisplay);
         return eglDisplay;
+    }
 
     g_set_error_literal(error, WPE_EGL_ERROR, WPE_EGL_ERROR_NOT_AVAILABLE, "Can't get EGL display: no display connection matching wayland connection found");
     return nullptr;
@@ -534,8 +542,13 @@ static WPEClipboard* wpeDisplayWaylandGetClipboard(WPEDisplay* display)
 static WPEBufferDMABufFormats* wpeDisplayWaylandGetPreferredDMABufFormats(WPEDisplay* display)
 {
     auto* priv = WPE_DISPLAY_WAYLAND(display)->priv;
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+
     if (!priv->linuxDMABuf)
         return nullptr;
+
+    // g_message(">>>>>>> WPE 2: %s", G_STRFUNC);
+    WTFReportBacktrace();
 
     auto* builder = wpe_buffer_dma_buf_formats_builder_new(priv->drmDevice.get());
     wpe_buffer_dma_buf_formats_builder_append_group(builder, nullptr, WPE_BUFFER_DMA_BUF_FORMAT_USAGE_RENDERING);
@@ -561,6 +574,8 @@ static WPEScreen* wpeDisplayWaylandGetScreen(WPEDisplay* display, guint index)
 
 static WPEDRMDevice* wpeDisplayWaylandGetDRMDevice(WPEDisplay* display)
 {
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+    // WTFReportBacktrace();
     return WPE_DISPLAY_WAYLAND(display)->priv->drmDevice.get();
 }
 
@@ -660,6 +675,8 @@ static void wpe_display_wayland_class_init(WPEDisplayWaylandClass* displayWaylan
     displayClass->get_screen = wpeDisplayWaylandGetScreen;
     displayClass->get_drm_device = wpeDisplayWaylandGetDRMDevice;
     displayClass->use_explicit_sync = wpeDisplayWaylandUseExplicitSync;
+
+    g_message(">>>>>>> WPE: %s", G_STRFUNC);
 }
 
 /**

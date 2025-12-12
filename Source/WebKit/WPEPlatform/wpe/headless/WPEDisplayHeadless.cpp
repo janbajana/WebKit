@@ -40,6 +40,7 @@
 #include <wtf/glib/WTFGType.h>
 #include <wtf/text/CString.h>
 #include <wtf/unix/UnixFileDescriptor.h>
+#include <wtf/Assertions.h>
 
 #if USE(GBM)
 #include <gbm.h>
@@ -71,7 +72,7 @@ static void wpeDisplayHeadlessDispose(GObject* object)
 
 #if USE(GBM)
     g_clear_pointer(&priv->gbmDevice, gbm_device_destroy);
-    priv->gbmDeviceFD = { };
+    priv->gbmDeviceFD = {};
 #endif
 
     G_OBJECT_CLASS(wpe_display_headless_parent_class)->dispose(object);
@@ -79,11 +80,15 @@ static void wpeDisplayHeadlessDispose(GObject* object)
 
 static gboolean wpeDisplayHeadlessConnect(WPEDisplay*, GError**)
 {
+    g_debug(">>> WPE: wpeDisplayHeadlessConnect called");
+
     return TRUE;
 }
 
 static WPEView* wpeDisplayHeadlessCreateView(WPEDisplay* display)
 {
+    g_debug(">>> WPE: wpeDisplayHeadlessCreateView called");
+
     auto* view = WPE_VIEW(g_object_new(WPE_TYPE_VIEW_HEADLESS, "display", display, nullptr));
     if (wpe_settings_get_boolean(wpe_display_get_settings(display), WPE_SETTING_CREATE_VIEWS_WITH_A_TOPLEVEL, nullptr)) {
         GRefPtr<WPEToplevel> toplevel = adoptGRef(wpe_toplevel_headless_new(WPE_DISPLAY_HEADLESS(display)));
@@ -94,7 +99,12 @@ static WPEView* wpeDisplayHeadlessCreateView(WPEDisplay* display)
 
 static gpointer wpeDisplayHeadlessGetEGLDisplay(WPEDisplay* display, GError** error)
 {
+    g_debug(">>> WPE: wpeDisplayHeadlessGetEGLDisplay called");
+    // WTFReportBacktrace();
+
 #if USE(GBM)
+    g_debug(">>> WPE: wpeDisplayHeadlessGetEGLDisplay GBM called");
+
     if (auto* drmDevice = wpe_display_get_drm_device(display)) {
         if (!epoxy_has_egl_extension(nullptr, "EGL_KHR_platform_gbm")) {
             g_set_error_literal(error, WPE_EGL_ERROR, WPE_EGL_ERROR_NOT_AVAILABLE, "Can't get EGL display: GBM platform not supported");
@@ -154,6 +164,9 @@ static gpointer wpeDisplayHeadlessGetEGLDisplay(WPEDisplay* display, GError** er
 
 static WPEDRMDevice* wpeDisplayHeadlessGetDRMDevice(WPEDisplay* display)
 {
+    g_debug(">>> WPE: wpeDisplayHeadlessGetEGLDisplay called");
+    WTFReportBacktrace();
+
     auto* displayHeadless = WPE_DISPLAY_HEADLESS(display);
     auto* priv = displayHeadless->priv;
     if (!priv->drmDevice.has_value())
@@ -171,6 +184,8 @@ static void wpe_display_headless_class_init(WPEDisplayHeadlessClass* displayHead
     displayClass->create_view = wpeDisplayHeadlessCreateView;
     displayClass->get_egl_display = wpeDisplayHeadlessGetEGLDisplay;
     displayClass->get_drm_device = wpeDisplayHeadlessGetDRMDevice;
+
+    g_debug(">>> WPE: wpe_display_headless_class_init called");
 }
 
 /**
@@ -182,6 +197,7 @@ static void wpe_display_headless_class_init(WPEDisplayHeadlessClass* displayHead
  */
 WPEDisplay* wpe_display_headless_new(void)
 {
+    g_debug(">>> WPE: wpe_display_headless_new called");
     return WPE_DISPLAY(g_object_new(WPE_TYPE_DISPLAY_HEADLESS, nullptr));
 }
 

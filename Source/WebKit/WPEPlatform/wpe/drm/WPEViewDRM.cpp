@@ -448,6 +448,7 @@ static gboolean wpeViewDRMRequestUpdate(WPEViewDRM* view, GError** error)
 
 static gboolean wpeViewDRMRenderBuffer(WPEView* view, WPEBuffer* buffer, const WPERectangle* damageRects, guint nDamageRects, GError** error)
 {
+    g_message(">>> wpeViewDRMRenderBuffer");
     auto* drmBuffer = static_cast<WPE::DRM::Buffer*>(wpe_buffer_get_user_data(buffer));
     if (!drmBuffer) {
         auto* display = WPE_DISPLAY_DRM(wpe_view_get_display(view));

@@ -602,6 +602,8 @@ WPEBufferDMABufFormats* wpe_toplevel_get_preferred_dma_buf_formats(WPEToplevel* 
 {
     g_return_val_if_fail(WPE_IS_TOPLEVEL(toplevel), nullptr);
 
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+
     auto* priv = toplevel->priv;
 #if USE(LIBDRM)
     if (priv->overridenDMABufFormats)
@@ -636,11 +638,15 @@ WPEBufferDMABufFormats* wpe_toplevel_get_preferred_dma_buf_formats(WPEToplevel* 
     }
 #endif
 
+    // g_message(">>>>>>> WPE 2: %s", G_STRFUNC);
+
     auto* toplevelClass = WPE_TOPLEVEL_GET_CLASS(toplevel);
     if (toplevelClass->get_preferred_dma_buf_formats) {
         if (auto* formats = toplevelClass->get_preferred_dma_buf_formats(toplevel))
             return formats;
     }
+
+    // g_message(">>>>>>> WPE 3: %s", G_STRFUNC);
 
     return priv->display ? wpe_display_get_preferred_dma_buf_formats(priv->display.get()) : nullptr;
 }

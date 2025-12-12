@@ -52,6 +52,7 @@ WEBKIT_DEFINE_FINAL_TYPE(WPEScreenDRM, wpe_screen_drm, WPE_TYPE_SCREEN, WPEScree
 static void wpeScreenDRMInvalidate(WPEScreen* screen)
 {
     WPE_SCREEN_CLASS(wpe_screen_drm_parent_class)->invalidate(screen);
+    g_message(">>>>>> WPEScreenDRM: wpeScreenDRMInvalidate");
 
     auto* priv = WPE_SCREEN_DRM(screen)->priv;
     priv->crtc = nullptr;
@@ -60,6 +61,8 @@ static void wpeScreenDRMInvalidate(WPEScreen* screen)
 
 static WPEScreenSyncObserver* wpeScreenDRMGetSyncObserver(WPEScreen* screen)
 {
+    g_message(">>>>>> WPEScreenDRM: wpeScreenDRMGetSyncObserver");
+
     auto* priv = WPE_SCREEN_DRM(screen)->priv;
     if (!priv->syncObserver && priv->crtc) {
         if (auto* device = wpeDisplayDRMGetDisplayDevice(WPE_DISPLAY_DRM(wpe_display_get_primary()))) {
@@ -85,6 +88,8 @@ static void wpeScreenDRMDispose(GObject* object)
 
 static void wpe_screen_drm_class_init(WPEScreenDRMClass* screenDRMClass)
 {
+    g_message(">>>>>> WPEScreenDRM: wpe_screen_drm_class_init");
+
     GObjectClass* objectClass = G_OBJECT_CLASS(screenDRMClass);
     objectClass->dispose = wpeScreenDRMDispose;
 
