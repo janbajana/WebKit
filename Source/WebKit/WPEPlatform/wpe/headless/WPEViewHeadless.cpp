@@ -115,6 +115,8 @@ static void wpeViewHeadlessDispose(GObject* object)
 static gboolean wpeViewHeadlessRenderBuffer(WPEView* view, WPEBuffer* buffer, const WPERectangle*, guint, GError**)
 {
     auto* priv = WPE_VIEW_HEADLESS(view)->priv;
+     g_debug(">>> WPE: wpeViewHeadlessRenderBuffer called");
+
     priv->pendingBuffer = buffer;
     auto now = g_get_monotonic_time();
     if (!priv->lastFrameTime)

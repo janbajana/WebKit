@@ -40,6 +40,7 @@
 #include <wtf/glib/WTFGType.h>
 #include <wtf/text/CString.h>
 #include <wtf/unix/UnixFileDescriptor.h>
+#include <wtf/Assertions.h>
 
 #if USE(GBM)
 #include <gbm.h>
@@ -99,6 +100,8 @@ static WPEView* wpeDisplayHeadlessCreateView(WPEDisplay* display)
 static gpointer wpeDisplayHeadlessGetEGLDisplay(WPEDisplay* display, GError** error)
 {
     g_debug(">>> WPE: wpeDisplayHeadlessGetEGLDisplay called");
+    // WTFReportBacktrace();
+
 #if USE(GBM)
     g_debug(">>> WPE: wpeDisplayHeadlessGetEGLDisplay GBM called");
 
@@ -161,6 +164,9 @@ static gpointer wpeDisplayHeadlessGetEGLDisplay(WPEDisplay* display, GError** er
 
 static WPEDRMDevice* wpeDisplayHeadlessGetDRMDevice(WPEDisplay* display)
 {
+    g_debug(">>> WPE: wpeDisplayHeadlessGetEGLDisplay called");
+    WTFReportBacktrace();
+
     auto* displayHeadless = WPE_DISPLAY_HEADLESS(display);
     auto* priv = displayHeadless->priv;
     if (!priv->drmDevice.has_value())

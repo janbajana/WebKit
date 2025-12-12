@@ -27,6 +27,7 @@
 #include "WPEScreenSyncObserver.h"
 
 #include <wtf/glib/WTFGType.h>
+#include <wtf/Assertions.h>
 
 /**
  * WPEScreenSyncObserver:
@@ -59,6 +60,9 @@ static void wpeScreenSyncObserverDispose(GObject* object)
 
 static void wpeScreenSyncObserverSync(WPEScreenSyncObserver* observer)
 {
+    // g_message(">>>>>> WPEScreenSyncObserver: wpeScreenSyncObserverSync");
+    // WTFReportBacktrace();
+
     auto* priv = observer->priv;
     priv->syncFunc(observer, priv->userData);
 }
@@ -67,6 +71,7 @@ static void wpe_screen_sync_observer_class_init(WPEScreenSyncObserverClass* scre
 {
     auto* objectClass = G_OBJECT_CLASS(screenSyncObserverClass);
     objectClass->dispose = wpeScreenSyncObserverDispose;
+    g_message(">>>>>> WPEScreenSyncObserver: wpe_screen_sync_observer_class_init");
 
     screenSyncObserverClass->sync = wpeScreenSyncObserverSync;
 }
@@ -83,6 +88,8 @@ static void wpe_screen_sync_observer_class_init(WPEScreenSyncObserverClass* scre
  */
 void wpe_screen_sync_observer_set_callback(WPEScreenSyncObserver* observer, WPEScreenSyncObserverSyncFunc syncFunc, gpointer userData, GDestroyNotify destroyNotify)
 {
+    g_message(">>>>>> WPEScreenSyncObserver: wpe_screen_sync_observer_set_callback");
+
     g_return_if_fail(WPE_IS_SCREEN_SYNC_OBSERVER(observer));
     g_return_if_fail(syncFunc);
 
@@ -105,6 +112,7 @@ void wpe_screen_sync_observer_start(WPEScreenSyncObserver* observer)
 {
     g_return_if_fail(WPE_IS_SCREEN_SYNC_OBSERVER(observer));
 
+    g_message(">>>>>> WPEScreenSyncObserver: wpe_screen_sync_observer_start");
     auto* priv = observer->priv;
     g_return_if_fail(priv->syncFunc);
 
@@ -125,6 +133,7 @@ void wpe_screen_sync_observer_start(WPEScreenSyncObserver* observer)
 void wpe_screen_sync_observer_stop(WPEScreenSyncObserver* observer)
 {
     g_return_if_fail(WPE_IS_SCREEN_SYNC_OBSERVER(observer));
+    g_message(">>>>>> WPEScreenSyncObserver: wpe_screen_sync_observer_stop");
 
     auto* priv = observer->priv;
     if (!priv->isActive)
@@ -145,6 +154,8 @@ void wpe_screen_sync_observer_stop(WPEScreenSyncObserver* observer)
  */
 gboolean wpe_screen_sync_observer_is_active(WPEScreenSyncObserver* observer)
 {
+        g_message(">>>>>> WPEScreenSyncObserver: wpe_screen_sync_observer_is_active");
+
     g_return_val_if_fail(WPE_IS_SCREEN_SYNC_OBSERVER(observer), FALSE);
 
     return observer->priv->isActive;

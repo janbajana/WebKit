@@ -247,10 +247,13 @@ DisplayVBlankMonitorDRM::DisplayVBlankMonitorDRM(unsigned refreshRate, UnixFileD
     , m_fd(WTFMove(fd))
     , m_crtcBitmask(crtcBitmask)
 {
+    g_message(">>>>>> WPEScreen DisplayVBlankMonitorDRM::DisplayVBlankMonitorDRM()");
 }
 
 bool DisplayVBlankMonitorDRM::waitForVBlank() const
 {
+    g_message(">>>>>> WPEScreen DisplayVBlankMonitorDRM::waitForVBlank");
+
     drmVBlank vblank;
     vblank.request.type = static_cast<drmVBlankSeqType>(DRM_VBLANK_RELATIVE | m_crtcBitmask);
     vblank.request.sequence = 1;

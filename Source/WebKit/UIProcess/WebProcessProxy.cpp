@@ -668,11 +668,13 @@ std::optional<unsigned> WebProcessProxy::nominalFramesPerSecondForDisplay(WebCor
 void WebProcessProxy::startDisplayLink(DisplayLinkObserverID observerID, WebCore::PlatformDisplayID displayID, WebCore::FramesPerSecond preferredFramesPerSecond)
 {
     ASSERT(hasProcessPrivilege(ProcessPrivilege::CanCommunicateWithWindowServer));
+    // g_message("WebProcessProxy::startDisplayLink: observerID=%u, displayID=%u, preferredFramesPerSecond=%u", observerID, static_cast<unsigned long long>(displayID), preferredFramesPerSecond);
     protectedProcessPool()->displayLinks().startDisplayLink(m_displayLinkClient, observerID, displayID, preferredFramesPerSecond);
 }
 
 void WebProcessProxy::stopDisplayLink(DisplayLinkObserverID observerID, WebCore::PlatformDisplayID displayID)
 {
+    // g_message("WebProcessProxy::stopDisplayLink: observerID=%u, displayID=%u", observerID, displayID);
     protectedProcessPool()->displayLinks().stopDisplayLink(m_displayLinkClient, observerID, displayID);
 }
 

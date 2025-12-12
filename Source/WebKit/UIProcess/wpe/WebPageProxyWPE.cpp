@@ -131,6 +131,8 @@ Vector<RendererBufferFormat> WebPageProxy::preferredBufferFormats() const
     if (!view)
         return { };
 
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+
     auto* formats = wpe_view_get_preferred_dma_buf_formats(view);
     if (!formats)
         return { };

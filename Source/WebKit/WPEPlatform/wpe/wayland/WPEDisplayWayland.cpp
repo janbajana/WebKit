@@ -509,6 +509,7 @@ static WPEInputMethodContext* wpeDisplayWaylandCreateInputMethodContext(WPEDispl
 static gpointer wpeDisplayWaylandGetEGLDisplay(WPEDisplay* display, GError** error)
 {
     g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // WTFReportBacktrace();
 
     auto* priv = WPE_DISPLAY_WAYLAND(display)->priv;
     if (!priv->wlDisplay) {
@@ -517,8 +518,8 @@ static gpointer wpeDisplayWaylandGetEGLDisplay(WPEDisplay* display, GError** err
     }
 
     if (auto* eglDisplay = eglGetDisplay(priv->wlDisplay)){
-        g_message(">>>>>>> WPE: %s: eglDisplay=%p (hex: 0x%lx)", G_STRFUNC, 
-            eglDisplay, (unsigned long)eglDisplay);
+        // g_message(">>>>>>> WPE: %s: eglDisplay=%p (hex: 0x%lx)", G_STRFUNC, 
+        //     eglDisplay, (unsigned long)eglDisplay);
         return eglDisplay;
     }
 
@@ -541,8 +542,13 @@ static WPEClipboard* wpeDisplayWaylandGetClipboard(WPEDisplay* display)
 static WPEBufferDMABufFormats* wpeDisplayWaylandGetPreferredDMABufFormats(WPEDisplay* display)
 {
     auto* priv = WPE_DISPLAY_WAYLAND(display)->priv;
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+
     if (!priv->linuxDMABuf)
         return nullptr;
+
+    // g_message(">>>>>>> WPE 2: %s", G_STRFUNC);
+    WTFReportBacktrace();
 
     auto* builder = wpe_buffer_dma_buf_formats_builder_new(priv->drmDevice.get());
     wpe_buffer_dma_buf_formats_builder_append_group(builder, nullptr, WPE_BUFFER_DMA_BUF_FORMAT_USAGE_RENDERING);
@@ -568,8 +574,8 @@ static WPEScreen* wpeDisplayWaylandGetScreen(WPEDisplay* display, guint index)
 
 static WPEDRMDevice* wpeDisplayWaylandGetDRMDevice(WPEDisplay* display)
 {
-    g_message(">>>>>>> WPE: %s", G_STRFUNC);
-    WTFReportBacktrace();
+    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+    // WTFReportBacktrace();
     return WPE_DISPLAY_WAYLAND(display)->priv->drmDevice.get();
 }
 
