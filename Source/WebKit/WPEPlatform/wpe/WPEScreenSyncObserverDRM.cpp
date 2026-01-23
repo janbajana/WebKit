@@ -160,8 +160,8 @@ static void wpeScreenSyncObserverDRMStart(WPEScreenSyncObserver* observer)
 
 static void wpeScreenSyncObserverDRMStop(WPEScreenSyncObserver* observer)
 {
-    g_message(">>>>>> WPEScreenSyncObserverDRM: wpeScreenSyncObserverDRMStop");
-    WTFReportBacktrace();
+    // g_message(">>>>>> WPEScreenSyncObserverDRM: wpeScreenSyncObserverDRMStop");
+    // WTFReportBacktrace();
 
     auto* priv = WPE_SCREEN_SYNC_OBSERVER_DRM(observer)->priv;
     Locker locker { priv->lock };
@@ -175,7 +175,7 @@ static void wpe_screen_sync_observer_drm_class_init(WPEScreenSyncObserverDRMClas
     auto* objectClass = G_OBJECT_CLASS(screenSyncObserverDRMClass);
     objectClass->dispose = wpeScreenSyncObserverDRMDispose;
 
-    g_message(">>>>>> WPEScreenSyncObserverDRM: wpe_screen_sync_observer_drm_class_init");
+    // g_message(">>>>>> WPEScreenSyncObserverDRM: wpe_screen_sync_observer_drm_class_init");
 
     auto* screenSyncObserverClass = WPE_SCREEN_SYNC_OBSERVER_CLASS(screenSyncObserverDRMClass);
     screenSyncObserverClass->start = wpeScreenSyncObserverDRMStart;
@@ -193,7 +193,7 @@ static int crtcBitmaskForIndex(uint32_t crtcIndex)
 
 WPEScreenSyncObserver* wpeScreenSyncObserverDRMCreate(UnixFileDescriptor&& fd, int crtcIndex)
 {
-    g_message(">>>>>> WPEScreenSyncObserverDRM: wpeScreenSyncObserverDRMCreate");
+    // g_message(">>>>>> WPEScreenSyncObserverDRM: wpeScreenSyncObserverDRMCreate");
 
     auto crtcBitmask = crtcBitmaskForIndex(crtcIndex);
     drmVBlank vblank;

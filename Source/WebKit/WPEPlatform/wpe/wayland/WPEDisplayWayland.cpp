@@ -482,7 +482,7 @@ static gboolean wpeDisplayWaylandConnect(WPEDisplay* display, GError** error)
 static WPEView* wpeDisplayWaylandCreateView(WPEDisplay* display)
 {
     auto* view = WPE_VIEW(g_object_new(WPE_TYPE_VIEW_WAYLAND, "display", display, nullptr));
-    g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE: %s", G_STRFUNC);
 
     if (wpe_settings_get_boolean(wpe_display_get_settings(display), WPE_SETTING_CREATE_VIEWS_WITH_A_TOPLEVEL, nullptr)) {
         GRefPtr<WPEToplevel> toplevel = adoptGRef(wpe_toplevel_wayland_new(WPE_DISPLAY_WAYLAND(display), 1));
@@ -508,7 +508,7 @@ static WPEInputMethodContext* wpeDisplayWaylandCreateInputMethodContext(WPEDispl
 
 static gpointer wpeDisplayWaylandGetEGLDisplay(WPEDisplay* display, GError** error)
 {
-    g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE: %s", G_STRFUNC);
     // WTFReportBacktrace();
 
     auto* priv = WPE_DISPLAY_WAYLAND(display)->priv;
@@ -574,7 +574,7 @@ static WPEScreen* wpeDisplayWaylandGetScreen(WPEDisplay* display, guint index)
 
 static WPEDRMDevice* wpeDisplayWaylandGetDRMDevice(WPEDisplay* display)
 {
-    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
     // WTFReportBacktrace();
     return WPE_DISPLAY_WAYLAND(display)->priv->drmDevice.get();
 }
@@ -676,7 +676,7 @@ static void wpe_display_wayland_class_init(WPEDisplayWaylandClass* displayWaylan
     displayClass->get_drm_device = wpeDisplayWaylandGetDRMDevice;
     displayClass->use_explicit_sync = wpeDisplayWaylandUseExplicitSync;
 
-    g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE: %s", G_STRFUNC);
 }
 
 /**

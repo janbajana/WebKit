@@ -297,18 +297,18 @@ static String renderBufferDescription(WebKitURISchemeRequest* request)
 
 static String vblankMonitorType(const DisplayVBlankMonitor& monitor)
 {
-    g_message(">>>>>> WPEScreen vblank: vblankMonitorType");
+    // g_message(">>>>>> WPEScreen vblank: vblankMonitorType");
 
 #if ENABLE(WPE_PLATFORM)
     if (monitor.type() == DisplayVBlankMonitor::Type::Wpe) {
-        g_message(">>>>>> WPEScreen: vblankMonitorType 2");
+        // g_message(">>>>>> WPEScreen: vblankMonitorType 2");
 
         const auto& wpeMonitor = *static_cast<const DisplayVBlankMonitorWPE*>(&monitor);
         return makeString("WPE ("_s, String::fromUTF8(G_OBJECT_TYPE_NAME(wpeMonitor.observer())), ')');
     }
 #endif
 
-    g_message(">>>>>> WPEScreen: vblankMonitorType 3");
+    // g_message(">>>>>> WPEScreen: vblankMonitorType 3");
     return monitor.type() == DisplayVBlankMonitor::Type::Timer ? "Timer"_s : "DRM"_s;
 }
 

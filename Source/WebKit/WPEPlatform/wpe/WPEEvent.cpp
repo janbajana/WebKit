@@ -558,6 +558,10 @@ WPEEvent* wpe_event_touch_new(WPEEventType type, WPEView* view, WPEInputSource s
     g_return_val_if_fail(type == WPE_EVENT_TOUCH_DOWN || type == WPE_EVENT_TOUCH_UP || type == WPE_EVENT_TOUCH_MOVE || type == WPE_EVENT_TOUCH_CANCEL, nullptr);
     g_return_val_if_fail(WPE_IS_VIEW(view), nullptr);
 
+    if(WPE_EVENT_TOUCH_UP == type || WPE_EVENT_TOUCH_DOWN == type) {
+        g_debug("WPEWebKit: wpe_event_touch_new type=%d, source=%d, time=%d, modifiers=%d, sequenceID=%d, x=%f, y=%f", type, source, time, modifiers, sequenceID, x, y);
+    }
+
     return new _WPEEvent { view, type, source, time, { nullptr, nullptr }, WPEEventTouch { modifiers, sequenceID, x, y }, 1 };
 }
 

@@ -49,7 +49,7 @@ DisplayLink::DisplayLink(PlatformDisplayID displayID)
 {
     platformInitialize();
 
-    g_message(">>>>>> WPEScreen DisplayLink::DisplayLink - displayID: %u, nominal fps: %u", displayID, m_displayNominalFramesPerSecond);
+    // g_message(">>>>>> WPEScreen DisplayLink::DisplayLink - displayID: %u, nominal fps: %u", displayID, m_displayNominalFramesPerSecond);
     LOG_WITH_STREAM(DisplayLink, stream << "[UI ] Created DisplayLink " << this << " for display " << displayID << " with nominal fps " << m_displayNominalFramesPerSecond);
 }
 

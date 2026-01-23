@@ -882,7 +882,7 @@ WPEToplevelState wpe_view_get_toplevel_state(WPEView* view)
 WPEScreen* wpe_view_get_screen(WPEView* view)
 {
     g_return_val_if_fail(WPE_IS_VIEW(view), nullptr);
-    g_message(">>>>>> WPEScreen wpe_view_get_screen");
+    // g_message(">>>>>> WPEScreen wpe_view_get_screen");
     return view->priv->toplevel ? wpe_toplevel_get_screen(view->priv->toplevel.get()) : nullptr;
 }
 
@@ -954,6 +954,12 @@ void wpe_view_event(WPEView* view, WPEEvent* event)
 
     gboolean handled;
     g_signal_emit(view, signals[EVENT], 0, event, &handled);
+
+    WPEEventType type = wpe_event_get_event_type(event);
+    if(WPE_EVENT_TOUCH_UP == type || WPE_EVENT_TOUCH_DOWN == type) {
+        g_debug("WPEWebKit: wpe_view_event type=%d, source=%d, time=%d, modifiers=%d, sequenceID=%d", 
+            type, wpe_event_get_input_source(event), wpe_event_get_time(event), wpe_event_get_modifiers(event), wpe_event_touch_get_sequence_id(event));
+    }
 
     auto* priv = view->priv;
     if (priv->lastButtonPress.pressCount && wpe_event_get_event_type(event) == WPE_EVENT_POINTER_MOVE) {
@@ -1062,7 +1068,7 @@ gboolean wpe_view_get_has_focus(WPEView* view)
 WPEBufferDMABufFormats* wpe_view_get_preferred_dma_buf_formats(WPEView* view)
 {
     g_return_val_if_fail(WPE_IS_VIEW(view), nullptr);
-    g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE 1: %s", G_STRFUNC);
 
     if (!view->priv->toplevel)
         return nullptr;

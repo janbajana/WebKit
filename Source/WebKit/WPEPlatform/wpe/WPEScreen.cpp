@@ -207,7 +207,7 @@ static void wpeScreenTryEnsureSyncObserver(WPEScreen* screen)
     if (devicesNum <= 0)
         return;
 
-    g_message(">>>>>> WPEScreen: wpeScreenTryEnsureSyncObserver");
+    // g_message(">>>>>> WPEScreen: wpeScreenTryEnsureSyncObserver");
 
     for (int i = 0; i < devicesNum; i++) {
         if (!(devices[i]->available_nodes & (1 << DRM_NODE_PRIMARY)))

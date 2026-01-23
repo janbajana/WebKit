@@ -165,7 +165,7 @@ void AcceleratedBackingStore::renderPendingBuffer()
     ASSERT(m_pendingDamageRects.size() <= std::numeric_limits<guint>::max());
     const auto* rects = !m_pendingDamageRects.isEmpty() ? reinterpret_cast<const WPERectangle*>(m_pendingDamageRects.span().data()) : nullptr;
 
-    g_message(">>> renderPendingBuffer");
+    // g_message(">>> renderPendingBuffer");
     // WTFReportBacktrace();
     GUniqueOutPtr<GError> error;
     if (!wpe_view_render_buffer(m_wpeView.get(), m_pendingBuffer.get(), rects, m_pendingDamageRects.size(), &error.outPtr())) {

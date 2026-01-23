@@ -47,7 +47,7 @@ WEBKIT_DEFINE_FINAL_TYPE(WPEScreenWayland, wpe_screen_wayland, WPE_TYPE_SCREEN, 
 static void wpeScreenWaylandInvalidate(WPEScreen* screen)
 {
     WPE_SCREEN_CLASS(wpe_screen_wayland_parent_class)->invalidate(screen);
-    g_message(">>>>>> WPEScreen: wpeScreenWaylandInvalidate");
+    // g_message(">>>>>> WPEScreen: wpeScreenWaylandInvalidate");
 
     auto* priv = WPE_SCREEN_WAYLAND(screen)->priv;
     if (priv->wlOutput) {
@@ -68,7 +68,7 @@ static void wpeScreenWaylandDispose(GObject* object)
 
 static void wpe_screen_wayland_class_init(WPEScreenWaylandClass* screenWaylandClass)
 {
-    g_message(">>>>>> WPEScreen: wpe_screen_wayland_class_init");
+    // g_message(">>>>>> WPEScreen: wpe_screen_wayland_class_init");
 
     GObjectClass* objectClass = G_OBJECT_CLASS(screenWaylandClass);
     objectClass->dispose = wpeScreenWaylandDispose;
@@ -135,7 +135,7 @@ static const struct wl_output_listener outputListener = {
 
 WPEScreen* wpeScreenWaylandCreate(guint32 id, struct wl_output* wlOutput)
 {
-    g_message(">>>>>> WPEScreen: wpeScreenWaylandCreate");
+    // g_message(">>>>>> WPEScreen: wpeScreenWaylandCreate");
 
     auto* screen = WPE_SCREEN_WAYLAND(g_object_new(WPE_TYPE_SCREEN_WAYLAND, "id", id, nullptr));
     screen->priv->wlOutput = wlOutput;
@@ -154,7 +154,7 @@ WPEScreen* wpeScreenWaylandCreate(guint32 id, struct wl_output* wlOutput)
 struct wl_output* wpe_screen_wayland_get_wl_output(WPEScreenWayland* screen)
 {
     g_return_val_if_fail(WPE_IS_SCREEN_WAYLAND(screen), nullptr);
-    g_message(">>>>>> WPEScreen: wpe_screen_wayland_get_wl_output");
+    // g_message(">>>>>> WPEScreen: wpe_screen_wayland_get_wl_output");
 
     return screen->priv->wlOutput;
 }

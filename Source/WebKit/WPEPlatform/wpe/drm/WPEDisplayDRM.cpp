@@ -432,7 +432,7 @@ static WPEView* wpeDisplayDRMCreateView(WPEDisplay* display)
 {
     auto* displayDRM = WPE_DISPLAY_DRM(display);
     auto* view = WPE_VIEW(g_object_new(WPE_TYPE_VIEW_DRM, "display", display, nullptr));
-    g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE: %s", G_STRFUNC);
 
     if (wpe_settings_get_boolean(wpe_display_get_settings(display), WPE_SETTING_CREATE_VIEWS_WITH_A_TOPLEVEL, nullptr)) {
         GRefPtr<WPEToplevel> toplevel = adoptGRef(wpe_toplevel_drm_new(displayDRM));
@@ -471,7 +471,7 @@ static WPEScreen* wpeDisplayDRMGetScreen(WPEDisplay* display, guint index)
 static WPEDRMDevice* wpeDisplayDRMGetDRMDevice(WPEDisplay* display)
 {
     auto* priv = WPE_DISPLAY_DRM(display)->priv;
-    g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE: %s", G_STRFUNC);
     return priv->renderDevice ? priv->renderDevice.get() : priv->displayDevice.get();
 }
 
@@ -495,7 +495,7 @@ static void wpe_display_drm_class_init(WPEDisplayDRMClass* displayDRMClass)
     displayClass->get_drm_device = wpeDisplayDRMGetDRMDevice;
     displayClass->use_explicit_sync = wpeDisplayDRMUseExplicitSync;
 
-    g_message(">>>>>>> WPE: %s", G_STRFUNC);
+    // g_message(">>>>>>> WPE: %s", G_STRFUNC);
 }
 
 const WPE::DRM::Connector& wpeDisplayDRMGetConnector(WPEDisplayDRM* display)

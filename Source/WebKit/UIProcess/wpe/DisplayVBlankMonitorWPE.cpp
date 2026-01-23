@@ -58,7 +58,7 @@ DisplayVBlankMonitorWPE::DisplayVBlankMonitorWPE(unsigned refreshRate, GRefPtr<W
     : DisplayVBlankMonitor(refreshRate)
     , m_observer(WTFMove(observer))
 {
-    g_message(">>>>>> WPEScreen DisplayVBlankMonitorWPE:DisplayVBlankMonitorWPE() refreshRate: %u", m_refreshRate);
+    // g_message(">>>>>> WPEScreen DisplayVBlankMonitorWPE:DisplayVBlankMonitorWPE() refreshRate: %u", m_refreshRate);
 
     wpe_screen_sync_observer_set_callback(m_observer.get(), +[](WPEScreenSyncObserver* observer, gpointer userData) {
         // g_message(">>>>>> WPEScreen DisplayVBlankMonitorWPE: VBlank occurred");

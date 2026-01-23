@@ -301,9 +301,9 @@ static struct wl_buffer* createWaylandBufferFromDMABuf(WPEView* view, WPEBuffer*
       const int bufferHeight = wpe_buffer_get_height(buffer);
       const int nPlanes = (size_t)wpe_buffer_dma_buf_get_n_planes(bufferDMABuf);
 
-      g_message("<<<<<<<< >>>>>>> wpe_drawing_area_ensure_texture buffer=%p, size=%dx%d, "
-                "planes=%d",
-                buffer, bufferWidth, bufferHeight, nPlanes);
+    //   g_message("<<<<<<<< >>>>>>> wpe_drawing_area_ensure_texture buffer=%p, size=%dx%d, "
+    //             "planes=%d",
+    //             buffer, bufferWidth, bufferHeight, nPlanes);
 
       for (int iPlane = 0; iPlane < nPlanes; iPlane++)
       {
@@ -740,7 +740,7 @@ static void wpeViewWaylandSetOpaqueRectangles(WPEView* view, WPERectangle* rects
 
 static gboolean wpeViewWaylandCanBeMapped(WPEView* view)
 {
-    g_message(">>>>>> WPEScreen wpeViewWaylandCanBeMapped");
+    // g_message(">>>>>> WPEScreen wpeViewWaylandCanBeMapped");
     if (auto* toplevel = wpe_view_get_toplevel(view))
         return !!wpe_toplevel_get_screen(toplevel);
     return FALSE;

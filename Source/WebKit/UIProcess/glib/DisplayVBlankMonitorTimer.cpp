@@ -40,7 +40,7 @@ std::unique_ptr<DisplayVBlankMonitor> DisplayVBlankMonitorTimer::create()
 DisplayVBlankMonitorTimer::DisplayVBlankMonitorTimer()
     : DisplayVBlankMonitorThreaded(WebCore::FullSpeedFramesPerSecond)
 {
-    g_message(">>>>>> WPEScreen DisplayVBlankMonitorTimer::DisplayVBlankMonitorTimer()");
+    // g_message(">>>>>> WPEScreen DisplayVBlankMonitorTimer::DisplayVBlankMonitorTimer()");
 }
 
 bool DisplayVBlankMonitorTimer::waitForVBlank() const

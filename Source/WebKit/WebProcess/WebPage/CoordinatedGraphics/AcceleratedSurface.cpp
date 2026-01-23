@@ -220,8 +220,8 @@ std::unique_ptr<AcceleratedSurface::RenderTarget> AcceleratedSurface::RenderTarg
         return nullptr;
     }
 
-    g_message(">>>>>>>> WPE 1: %s", G_STRFUNC);
-    WTFReportBacktrace();
+    // g_message(">>>>>>>> WPE 1: %s", G_STRFUNC);
+    // WTFReportBacktrace();
 
 
     auto gbmDevice = bufferFormat.gbmDevice;

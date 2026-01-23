@@ -37,7 +37,7 @@ DisplayVBlankMonitorThreaded::DisplayVBlankMonitorThreaded(unsigned refreshRate)
     : DisplayVBlankMonitor(refreshRate)
     , m_destroyThreadTimer(RunLoop::mainSingleton(), "DisplayVBlankMonitorThreaded::DestroyThreadTimer"_s, this, &DisplayVBlankMonitorThreaded::destroyThreadTimerFired)
 {
-    g_message(">>>>>> WPEScreen DisplayVBlankMonitorThreaded::DisplayVBlankMonitorThreaded()");
+    // g_message(">>>>>> WPEScreen DisplayVBlankMonitorThreaded::DisplayVBlankMonitorThreaded()");
     m_destroyThreadTimer.setPriority(RunLoopSourcePriority::ReleaseUnusedResourcesTimer);
 }
 
